@@ -15,7 +15,9 @@ export function RewardsCenter() {
   const [activeUser, setActiveUser] = useState(null);
   const [search, setSearch] = useState("");
   const [err, setError] = useState(null);
-  
+  const [isShown, setIsShown] = useState(false);
+  const [displayText, setDisplayText] = useState("DisplayTransactions");
+    
   // Constants
   const searchId = useId();
   const deferredSearch = useDeferredValue(search);
@@ -49,6 +51,16 @@ export function RewardsCenter() {
     
     setSearch(value);
   }
+  const handleClick = (event) => {
+    // 👇️ toggle shown state
+    setIsShown(current => !current);
+    if(isShown === true){
+      setDisplayText("DisplayTransactions")
+      
+    }else{
+      setDisplayText("HideTransactions")
+    }
+  };  
   
   return <RewardsCenterContext.Provider value={{ users, transactions, pointTable, activeUser, handleActiveUserClick }}>
     {err && <div className={styles["error_container"]}>
@@ -60,11 +72,21 @@ export function RewardsCenter() {
         <input type="text" name="username" placeholder='User name' id={searchId} value={search} onChange={handleUserSearch} />
       </div>
       <div className={styles["users__container"]}>
-        <TransactionStats /> 
+        
         <UserList />                      
         <MonthStats />
       </div>
-      
+      <div className={styles["button_container"]}>
+        <button onClick={handleClick}>{displayText}</button>
+      </div>
+      <div className={styles["transactions__container"]}>
+        {/*show elements on click */}
+        {isShown && (
+        <div>
+          <TransactionStats /> 
+        </div>
+        )}
+    </div>
       <div className={styles["month__stats__container"]}>
       </div>
     </div>
